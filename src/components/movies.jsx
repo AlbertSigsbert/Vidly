@@ -4,20 +4,28 @@ import { getMovies } from "../services/fakeMovieService";
 class Movies extends React.Component {
   state = {
     movies: getMovies(),
-    movieCount: getMovies().length,
+    // movieCount: getMovies().length,
   };
   handleDelete = (movie) => {
-    const row = document.getElementById(`${movie.title}`);
-    row.classList.add("d-none");
-    this.setState({ movieCount: this.state.movieCount - 1 });
+    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+    this.setState({ movies });
+    // const row = document.getElementById(`${movie._id}`);
+    // row.classList.add("d-none");
+    // this.setState({ movieCount: this.state.movieCount - 1 });
   };
   render() {
+    const { length: count } = this.state.movies;
+    if (count === 0)
+      return (
+        <p className=" container font-weight-bold lead py-4">
+          There are no movies
+        </p>
+      );
+
     return (
       <main className="container">
         <p className="font-weight-bold lead py-4">
-          {this.state.movieCount === 0
-            ? "There are no movies"
-            : ` Showing ${this.state.movieCount} movies in the database`}
+          Showing {count} movies in the database
         </p>
         <table className="table table-striped">
           <thead>
@@ -31,7 +39,7 @@ class Movies extends React.Component {
           </thead>
           <tbody>
             {this.state.movies.map((movie) => (
-              <tr id={movie.title}>
+              <tr id={movie._id}>
                 <th scope="row">{movie.title}</th>
                 <td>{movie.genre.name}</td>
                 <td>{movie.numberInStock}</td>
