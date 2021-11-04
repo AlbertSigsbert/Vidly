@@ -5,26 +5,19 @@ import Like from "./like";
 class Movies extends React.Component {
   state = {
     movies: getMovies(),
-    liked: false
-    // movieCount: getMovies().length,
+   
   };
   handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
-    // const row = document.getElementById(`${movie._id}`);
-    // row.classList.add("d-none");
-    // this.setState({ movieCount: this.state.movieCount - 1 });
   };
 
-  handleLike = () => {
-    let liked = this.state.liked
-     if(liked){
-      liked = false
-     } else(
-       liked = true
-     )
-
-     this.setState({liked})
+  handleLike = (movie) => {
+      const movies = [...this.state.movies];
+      const index = movies.indexOf(movie);
+      movies[index] = {...movies[index]};
+      movies[index].liked = !movies[index].liked;
+      this.setState({ movies })
   }
   render() {
     const { length: count } = this.state.movies;
@@ -53,12 +46,12 @@ class Movies extends React.Component {
           </thead>
           <tbody>
             {this.state.movies.map((movie) => (
-              <tr id={movie._id}>
+              <tr key={movie._id} id={movie._id}>
                 <th scope="row">{movie.title}</th>
                 <td>{movie.genre.name}</td>
                 <td>{movie.numberInStock}</td>
                 <td>{movie.dailyRentalRate}</td>
-                <td><Like liked={this.state.liked}  onLike={this.handleLike} /></td>
+                <td><Like liked={movie.liked}  onClick={ () => this.handleLike(movie) } /></td>
                 <td>
                   <button
                     className="btn btn-danger btn-sm"

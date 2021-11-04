@@ -7,7 +7,7 @@ class Like extends React.Component {
     if(!this.props.liked) classes += '-o'
     return (
       <div>
-         <i onClick={this.props.onLike} className={classes}></i>
+         <i onClick={this.props.onClick} className={classes}></i>
       </div>
     );
   }
