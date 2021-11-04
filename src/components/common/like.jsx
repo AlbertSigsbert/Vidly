@@ -5,7 +5,7 @@ const Like = (props) => {
   if (!props.liked) classes += "-o";
   return (
     <div>
-      <i onClick={props.onClick} className={classes}></i>
+      <i onClick={props.onClick} className={classes} style={ {cursor:'pointer'} }></i>
     </div>
   );
 };
