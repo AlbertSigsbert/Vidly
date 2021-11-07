@@ -1,19 +1,25 @@
 import React from "react";
-import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/like";
 import Pagination from "./common/pagination";
-import { paginate } from "../utils/paginate";
 import SideNav from "./common/sidenav";
+import { paginate } from "../utils/paginate";
+import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
+
 
 class Movies extends React.Component {
   state = {
-    movies: getMovies(),
+    movies: [],
+    genres: [],
     currentPage: 1,
     pageSize: 4,
-    genres: getGenres(),
-    currentGenre: "all-genres",
+  
   };
+
+  componentDidMount() {
+    const genres = [{ name : 'All Genres'}, ...getGenres()]
+    this.setState({ movies: getMovies(), genres });
+  }
   handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
@@ -31,8 +37,8 @@ class Movies extends React.Component {
     this.setState({ currentPage: page });
   };
 
-  handleGenreChange = (genre) => {
-    this.setState({ currentGenre: genre.name });
+  handleGenreSelect = (genre) => {
+    this.setState({selectedGenre: genre, currentPage:1 });
   };
   render() {
     const { length: count } = this.state.movies;
@@ -41,7 +47,7 @@ class Movies extends React.Component {
       currentPage,
       movies: allMovies,
       genres,
-      currentGenre,
+      selectedGenre,
     } = this.state;
 
     if (count === 0)
@@ -51,18 +57,19 @@ class Movies extends React.Component {
         </p>
       );
 
-    const movies = paginate(allMovies, currentPage, pageSize);
+    const filtered = selectedGenre && selectedGenre._id ? allMovies.filter(m=> m.genre._id === selectedGenre._id) : allMovies;
+    const movies = paginate(filtered, currentPage, pageSize);
 
     return (
       <main className="container">
         <p className="font-weight-bold lead py-4">
-          Showing {count} movies in the database
+          Showing {filtered.length} movies in the database
         </p>
         <div className="row">
           <SideNav
-            navItems={genres}
-            currentGenre={currentGenre}
-            onGenreChange={this.handleGenreChange}
+            items={genres}
+            selectedItem={selectedGenre}
+            onItemSelect={this.handleGenreSelect}
           />
           <div className="col-sm col-9 mx-4">
             <table className="table table-striped table-bordered">
@@ -102,7 +109,7 @@ class Movies extends React.Component {
               </tbody>
             </table>
             <Pagination
-              itemsCount={count}
+              itemsCount={filtered.length}
               pageSize={pageSize}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}

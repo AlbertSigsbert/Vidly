@@ -1,24 +1,30 @@
 import React from "react";
 const SideNav = (props) => {
-  const { navItems: genres, currentGenre, onGenreChange } = props;
+  const { items:genres, textProperty,valueProperty, selectedItem, onItemSelect } = props;
 
   return (
     <ul className="list-group">
-      <li key="all-genres" className="list-group-item active">
-        All Genres
-      </li>
       {genres.map((genre) => (
         <li
-          key={genre._id}
-          style={ {cursor:'pointer'} }
-          className={genre.name === currentGenre ? 'list-group-item active' : 'list-group-item'}
-          onClick={() => onGenreChange(genre)}
+          key={genre[valueProperty]}
+          style={{ cursor: "pointer" }}
+          className={
+            genre === selectedItem
+              ? "list-group-item active"
+              : "list-group-item"
+          }
+          onClick={() => onItemSelect(genre)}
         >
-          {genre.name}
+          {genre[textProperty]}
         </li>
       ))}
     </ul>
   );
+};
+
+SideNav.defaultProps = {
+  textProperty:"name",
+  valueProperty:"_id"
 };
 
 export default SideNav;
