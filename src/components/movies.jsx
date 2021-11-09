@@ -13,33 +13,21 @@ class Movies extends React.Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
-    sortColumn: { path:'title' , order:'asc'}
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres", _id:""}, ...getGenres()];
+    const genres = [{ name: "All Genres", _id: "" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
   }
   handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
   };
-  
-  handleSort = (path) => {
-    // const sortColumn = {...this.state.sortColumn};
-    // if (sortColumn.path === path) {
-    //   sortColumn.order = sortColumn.order === 'asc' ? 'desc': 'asc';
-    // }
-    // else{
-    //   sortColumn.path = path;
-    //   sortColumn.order = 'asc';
-    // }
 
-    // this.setState({sortColumn})
-     const sortColumn = {...this.state.sortColumn};
-     const order = (sortColumn.path === path) && sortColumn.order === 'asc'? 'desc' : 'asc';
-     this.setState({ sortColumn: {path, order}});
-  }
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
+  };
   handleLike = (movie) => {
     const movies = [...this.state.movies];
     const index = movies.indexOf(movie);
@@ -63,7 +51,7 @@ class Movies extends React.Component {
       movies: allMovies,
       genres,
       selectedGenre,
-      sortColumn
+      sortColumn,
     } = this.state;
 
     if (count === 0)
@@ -96,16 +84,16 @@ class Movies extends React.Component {
           <div className="col-sm col-9 mx-4">
             <MovieTable
               movies={movies}
+              sortColumn={sortColumn}
               onLike={this.handleLike}
               onDelete={this.handleDelete}
-              onSort ={this.handleSort}
+              onSort={this.handleSort}
             />
             <Pagination
               itemsCount={filtered.length}
               pageSize={pageSize}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}
-          
             />
           </div>
         </div>

@@ -1,45 +1,27 @@
 import React from "react";
-import Like from "./common/like";
-const MovieTable = (props) => {
-    const {movies, onLike, onDelete,onSort} = props;
-  return (
-    <table className="table table-striped table-bordered">
-      <thead>
-        <tr className="font-weight-bold">
-          <th scope="col" onClick={ () => onSort('title')}>Title </th>
-          <th scope="col" onClick={ () => onSort('genre.name')}>Genre</th>
-          <th scope="col" onClick={ () => onSort('numberInStock')}>Stock</th>
-          <th scope="col" onClick={ () => onSort('dailyRentalRate')}>Rate</th>
-          <th />
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {movies.map((movie) => (
-          <tr key={movie._id} id={movie._id}>
-            <th scope="row">{movie.title}</th>
-            <td>{movie.genre.name}</td>
-            <td>{movie.numberInStock}</td>
-            <td>{movie.dailyRentalRate}</td>
-            <td>
-              <Like
-                liked={movie.liked}
-                onClick={() => onLike(movie)}
-              />
-            </td>
-            <td>
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => onDelete(movie)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
 
+import TableBody from "./common/tableBody";
+import TableHeader from "./common/tableHeader";
+
+class MovieTable extends React.Component {
+
+  columns = [
+     {name:'title', label:'Title'},
+     {name:'genre.name', label:'Genre'},
+     {name:'numberInStock', label:'Stock'},
+     {name:'dailyRentalRate', label:'Rate'},
+     {key:'like'},
+     {key:'delete'},
+  ]
+  render() { 
+    const {movies, onLike, onDelete, onSort, sortColumn} = this.props;
+    return (
+      <table className="table table-striped table-bordered">
+          <TableHeader columns={this.columns} onSort={onSort} sortColumn={sortColumn}/>
+          <TableBody columns={this.columns} data={movies} onLike={onLike} onDelete={onDelete}/>
+      </table>
+    );
+  }
+}
+ 
 export default MovieTable;
