@@ -1,11 +1,11 @@
 import React from "react";
 
-const Like = (props) => {
+const Like = ({liked, onClick}) => {
   let classes = "fa fa-heart";
-  if (!props.liked) classes += "-o";
+  if (!liked) classes += "-o";
   return (
     <div>
-      <i onClick={props.onClick} className={classes} style={ {cursor:'pointer'} }></i>
+      <i onClick={onClick} className={classes} style={ {cursor:'pointer'} }></i>
     </div>
   );
 };
