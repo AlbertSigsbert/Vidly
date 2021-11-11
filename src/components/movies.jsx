@@ -95,7 +95,7 @@ class Movies extends React.Component {
             selectedItem={selectedGenre}
             onItemSelect={this.handleGenreSelect}
           />
-          <div className="col-sm col-9 mx-4">
+          <div className="col-sm col-9 mx-lg-4">
             <MovieTable
               movies={movies}
               sortColumn={sortColumn}
