@@ -11,12 +11,14 @@ import MovieForm from './components/movieForm';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css'
 import  './app.css';
+import LoginForm from './components/loginForm';
 
 ReactDOM.render(
   <React.StrictMode>
    <BrowserRouter>
     <Navbar />
      <Routes>
+        <Route path="/login" element={<LoginForm/>} />
         <Route path="/not-found" element={<NotFound/>}/>
         <Route path="/movies" element={<Movies/>}/>
         <Route path="/movies/:movie_id" element={<MovieForm/>} />
