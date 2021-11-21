@@ -1,49 +1,73 @@
 import React from "react";
+import Joi from "joi-browser";
 import Input from "./common/input";
 
 class LoginForm extends React.Component {
   state = {
     account: { username: "", password: "" },
-    errors: {}
+    errors: {},
   };
 
+  schema = {
+    username: Joi.string().required().label('Username'),
+    password: Joi.string().required().label('Password'),
+  };
+
+
+  validateProperty = ({ name, value }) => {
+     const inputObj = {[name] : value};
+     const schema = { [name] : this.schema[name]}
+     const {error} = Joi.validate(inputObj, schema);
+    
+     return error ? error.details[0].message : null;
+  }
+
   handleChange = ({ currentTarget: input }) => {
+    //Validate specific Input
+    const errors = {...this.state.errors};
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else  delete errors[input.name];
+     
+    //Set values to state
     const account = { ...this.state.account };
     account[input.name] = input.value;
-    this.setState({ account });
+    this.setState({ account , errors });
   };
 
   validate = () => {
-     const errors = {};
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
 
-     const {account} = this.state;
+    if (!error) return null;
 
-     if(account.username.trim() === '')
-        errors.username = 'Username is required.';
+    const errors = {};
 
-     if(account.password.trim() === '')
-        errors.password = 'Password is required.';
+    for (const item of error.details) {
+      errors[item.path[0]] = item.message;
+    }
 
-      return Object.keys(errors).length === 0 ? null : errors;
-   
-  }
+    return errors;
+  };
+
+
   handleSubmit = (e) => {
     e.preventDefault();
 
     //Validate
     const errors = this.validate();
     console.log(errors);
-    this.setState({ errors:errors || {} })
+    this.setState({ errors: errors || {} });
 
-    if(errors) return;
-    
+    if (errors) return;
+
     //Call server
     console.log("Submitted");
   };
 
   render() {
     const { account, errors } = this.state;
-   
+
     return (
       <div className="container">
         <h1>Login</h1>
@@ -63,7 +87,7 @@ class LoginForm extends React.Component {
             error={errors.password}
           />
 
-          <button type="submit" className="btn btn-primary">
+          <button disabled={ this.validate() } type="submit" className="btn btn-primary">
             Login
           </button>
         </form>
