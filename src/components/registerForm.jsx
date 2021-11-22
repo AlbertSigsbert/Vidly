@@ -2,15 +2,18 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
 
-class LoginForm extends Form {
+class RegisterForm extends Form {
   state = {
-    data: { username: "", password: "" },
+    data: { firstname: "", lastname:"", email:"", password: "", confirmPassword:"" },
     errors: {},
   };
 
   schema = {
-    username: Joi.string().required().label("Username"),
+    firstname: Joi.string().required().label("First Name"),
+    lastname: Joi.string().required().label("Last Name"),
+    email:Joi.string().email().required().label("Email"),
     password: Joi.string().required().label("Password"),
+    confirmPassword: Joi.string().required().label("Password"),
   };
 
   doSubmit = () => {
