@@ -8,10 +8,14 @@ import Customers from './components/customers';
 import Rentals from './components/rentals';
 import NotFound from './components/common/notFound';
 import MovieForm from './components/movieForm';
+import LoginForm from './components/loginForm';
+import RegisterForm from './components/registerForm';
+import AddMovie from './components/addMovie';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css'
 import  './app.css';
-import LoginForm from './components/loginForm';
+
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,8 +23,10 @@ ReactDOM.render(
     <Navbar />
      <Routes>
         <Route path="/login" element={<LoginForm/>} />
+        <Route path="/register" element={<RegisterForm/>} />
         <Route path="/not-found" element={<NotFound/>}/>
         <Route path="/movies" element={<Movies/>}/>
+        <Route path="/movies/new" element={< AddMovie/>}/>
         <Route path="/movies/:movie_id" element={<MovieForm/>} />
         <Route path="/customers" element={<Customers/>}/>
         <Route path="/rentals" element={<Rentals/>}/>

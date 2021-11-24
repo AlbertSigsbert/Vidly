@@ -1,11 +1,13 @@
 import React from "react";
 import Joi from "joi-browser";
 import Input from "./input";
+import Select from "./select";
 
 class Form extends React.Component {
   state = {
     data: {},
     errors: {},
+    selectedOption: null,
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -18,6 +20,7 @@ class Form extends React.Component {
     //Set values to state
     const data = { ...this.state.data };
     data[input.name] = input.value;
+
     this.setState({ data, errors });
   };
 
@@ -36,8 +39,8 @@ class Form extends React.Component {
     return errors;
   };
 
-  validateProperty = ({ name, value }) => {
-    const inputObj = { [name]: value };
+  validateProperty = ({ name, value }, action) => {
+    const inputObj = action ? { [action.name]: value } : { [name]: value };
     const schema = { [name]: this.schema[name] };
     const { error } = Joi.validate(inputObj, schema);
 
@@ -74,6 +77,19 @@ class Form extends React.Component {
     return (
       <Input
         type={type}
+        name={name}
+        label={label}
+        value={data[name]}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  };
+
+  renderSelect = (name, label, options) => {
+    const { data, errors } = this.state;
+    return (
+      <Select
         name={name}
         label={label}
         value={data[name]}
